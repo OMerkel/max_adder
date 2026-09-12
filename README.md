@@ -12,6 +12,8 @@ scores. The application includes optional MCTS/UCT computer AI opponents.
 
 ## Play the game
 
+[Play online now.](https://omerkel.github.io/max_adder/javascript/html5/src/)
+
 The application is a static HTML5/JavaScript app in
 [javascript/html5/src](javascript/html5/src). Because it uses ES modules and a
 Web Worker, serve the directory over HTTP rather than opening `index.html`
