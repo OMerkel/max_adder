@@ -1,0 +1,23 @@
+{
+	"version": "0.7",
+	"name": "Max Adder",
+	"description": "Max Adder with MCTS UCT AI",
+	"launch_path": "/index.html",
+	"orientation": "landscape-primary",
+	"icons": {
+		"16": "/img/icons/favicon.ico",
+		"32": "/img/icons/favicon.ico",
+		"48": "/img/icons/favicon.ico",
+		"60": "/img/icons/favicon.ico",
+		"64": "/img/icons/favicon.ico",
+		"90": "/img/icons/favicon.ico",
+		"120": "/img/icons/favicon.ico",
+		"128": "/img/icons/favicon.ico",
+		"256": "/img/icons/favicon.ico"
+	},
+	"developer": {
+		"name": "Oliver Merkel",
+		"url": "https://github.com/OMerkel"
+	},
+	"installs_allowed_from": ["*"]
+}

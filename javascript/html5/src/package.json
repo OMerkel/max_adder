@@ -1,0 +1,21 @@
+{
+	"name": "max_adder",
+	"version": "1.0.0",
+	"description": "Max Adder browser game with MCTS UCT AI",
+	"type": "module",
+	"scripts": {
+		"dev": "node tests/server.js",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"test:e2e": "playwright test",
+		"test:all": "node scripts/run-tests-all.js",
+		"build": "echo 'Static files ready - deploy src/ folder to hosting'"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.12",
+		"@playwright/test": "^1.52.0",
+		"@vitest/coverage-v8": "^3.0.0",
+		"vitest": "^3.0.0"
+	}
+}

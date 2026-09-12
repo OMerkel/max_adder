@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Max Adder with MCTS UCT AI" />
+  <meta name="theme-color" content="#2c3e50" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Max Adder" />
+  <link rel="icon" href="img/icons/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="img/icons/max_adder128.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="AUTHOR" content="Oliver Merkel" />
+  <meta name="COPYRIGHT" content="Oliver Merkel" />
+  <title>Max Adder</title>
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <header id="app-header">
+    <button id="btn-menu" class="icon-btn" type="button" aria-label="Open menu" aria-controls="side-panel">
+      <img src="img/icons/icon-bars.svg" alt="" />
+    </button>
+    <span id="app-header-title">Max Adder</span>
+    <span id="app-header-badge" aria-live="polite" aria-label="Active human player South">🧑▼</span>
+    <span id="app-score-badge" aria-live="polite" aria-label="Scores: 0 to 0">🧑▼0 - 0🧑▲</span>
+  </header>
+
+  <main id="app-content">
+    <section id="view-game" class="view">
+      <noscript>
+        <p>This application requires JavaScript. Please enable it in your browser settings.</p>
+      </noscript>
+      <div id="game-layout">
+        <div id="board"></div>
+      </div>
+      <div id="opening-choice" class="button-row" hidden>
+        <button class="btn" id="opening-assign-placer" type="button">Give opening score to🧑▼</button>
+        <button class="btn" id="opening-assign-decider" type="button">Give opening score to🤖▲</button>
+      </div>
+    </section>
+
+    <section id="view-rules" class="view view-section" hidden>
+      <h2>Rules</h2>
+
+      <p><b>Max Adder</b> is a two-player strategy game played on an 8 x 8 board with number tiles.</p>
+
+      <details>
+        <summary>Objective</summary>
+        <div>
+          <p>Score more points than your opponent by collecting number tiles.</p>
+          <p>One player controls horizontal movement and the other controls vertical movement.</p>
+          <p>The player who receives the opening score does not make the first regular move.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Movement</summary>
+        <div>
+          <ol>
+            <li>Choose an unvisited number tile on the row or column controlled by your marker role.</li>
+            <li>Move the marker to that tile and add its value to your score.</li>
+            <li>Players alternate turns after the opening placement and score allocation.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details>
+        <summary>Opening placement</summary>
+        <div>
+          <p>The randomly selected starting player places the marker on any tile and removes it.</p>
+          <p>The opponent decides which player's score receives that first tile value.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>End of Game</summary>
+        <div>
+          <p>The game ends when every tile has been scored or the active player's row or column has no remaining tile.</p>
+          <p>The player with the highest accumulated score wins.</p>
+          <p>When a game ends, open the menu and choose <b>New Game</b> to start again.</p>
+        </div>
+      </details>
+
+      <button class="btn btn-back" type="button">&#8592; Back</button>
+    </section>
+
+    <section id="view-options" class="view view-section" hidden>
+      <h2>Options</h2>
+      <p class="hint-text">Changes take effect immediately on AI turns and on new games.</p>
+      <form class="options-form" id="options-form">
+        <fieldset>
+          <legend>South player (horizontal ▼) is...</legend>
+          <label><input type="radio" name="horizontalplayer" value="Human" checked />Human</label>
+          <label><input type="radio" name="horizontalplayer" value="AI" />AI</label>
+        </fieldset>
+        <fieldset>
+          <legend>North player (vertical ▲) is...</legend>
+          <label><input type="radio" name="verticalplayer" value="Human" checked />Human</label>
+          <label><input type="radio" name="verticalplayer" value="AI" />AI</label>
+        </fieldset>
+        <fieldset>
+          <legend>Horizontal AI difficulty</legend>
+          <label><input type="radio" name="difficultyhorizontal" value="Easy" />Easy</label>
+          <label><input type="radio" name="difficultyhorizontal" value="Medium" checked />Medium</label>
+          <label><input type="radio" name="difficultyhorizontal" value="Hard" />Hard</label>
+        </fieldset>
+        <fieldset>
+          <legend>Vertical AI difficulty</legend>
+          <label><input type="radio" name="difficultyvertical" value="Easy" />Easy</label>
+          <label><input type="radio" name="difficultyvertical" value="Medium" checked />Medium</label>
+          <label><input type="radio" name="difficultyvertical" value="Hard" />Hard</label>
+        </fieldset>
+        <fieldset>
+          <legend>AI device profile</legend>
+          <label><input type="radio" name="deviceprofile" value="Auto" checked />Auto (detect)</label>
+          <label><input type="radio" name="deviceprofile" value="Desktop" />Desktop</label>
+          <label><input type="radio" name="deviceprofile" value="Mobile" />Mobile</label>
+        </fieldset>
+        <p class="hint-text" id="device-profile-hint">Auto currently resolves to Desktop.</p>
+      </form>
+      <div class="button-row">
+        <button class="btn" id="btn-options-ok" type="button">OK</button>
+        <button class="btn btn-back" id="btn-options-cancel" type="button">Cancel</button>
+      </div>
+    </section>
+
+    <section id="view-about" class="view view-section" hidden>
+      <h2>About Max Adder</h2>
+
+      <h3>Legal</h3>
+      <figure class="diagram" style="float:right;margin-left:12px;width:35%;">
+        <img src="img/oliver_max_adder.jpg" alt="Oliver Merkel" />
+        <figcaption>
+          Oliver Merkel,
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">cc-by-nc-nd 4.0</a>.
+        </figcaption>
+      </figure>
+      <p>
+        Copyright &copy; 2016, 2026<br />
+        <em>@author</em> Oliver Merkel, Merkel(dot)Oliver(at)web(dot)de.<br />
+        All rights reserved. Logos, brands, and trademarks belong to their respective owners.
+      </p>
+      <p>All source code (HTML, JavaScript, CSS) is released under the <strong>MIT License</strong>.</p>
+      <p>
+        Images are licensed under
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0" target="_blank">
+          Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+        </a>.
+      </p>
+
+      <details>
+        <summary>Third-party Code Licenses</summary>
+        <div>
+          <p>This version uses <strong>no third-party libraries</strong>.</p>
+          <p>The AI engine uses the UCT / MCTS algorithm.</p>
+        </div>
+      </details>
+
+      <button class="btn btn-back" type="button">&#8592; Back</button>
+    </section>
+  </main>
+
+</div>
+
+<div id="panel-overlay" hidden></div>
+
+<nav id="side-panel" aria-label="Main navigation">
+  <p class="panel-title">Max Adder</p>
+  <ul class="panel-nav">
+    <li><button id="btn-panel-close" type="button">&#10005; Close</button></li>
+    <li class="panel-divider"></li>
+    <li><button id="nav-new" type="button">&#9654; New Game</button></li>
+    <li class="panel-divider"></li>
+    <li><button id="nav-rules" type="button">Rules&hellip;</button></li>
+    <li><button id="nav-options" type="button">Options&hellip;</button></li>
+    <li><button id="nav-about" type="button">About&hellip;</button></li>
+  </ul>
+</nav>
+
+<script type="module" src="js/hmi.js"></script>
+
+<script>
+  // Register Service Worker for PWA support
+  // Service Workers require HTTPS (except localhost for development)
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+    navigator.serviceWorker.register('sw.js').then(registration => {
+      console.log('Service Worker registered successfully:', registration);
+    }).catch(error => {
+      console.log('Service Worker registration failed:', error);
+    });
+  }
+</script>
+
+</body>
+</html>

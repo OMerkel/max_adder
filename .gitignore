@@ -1,0 +1,5 @@
+/test-results
+/node_modules
+/playwright-report
+/coverage
+/.vscode
